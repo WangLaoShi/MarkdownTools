@@ -2,7 +2,7 @@
 
 Browser-based Markdown toolkit: editor, converters, generators, cheat sheets, and syntax guides.
 
-The published site is [https://WangLaoShi.github.io/MarkdownTools/](https://WangLaoShi.github.io/MarkdownTools/).
+The published site is [http://www.dtale.cn/MarkdownTools/](http://www.dtale.cn/MarkdownTools/). `https://WangLaoShi.github.io/MarkdownTools/` redirects there, because this GitHub account already serves Pages on `www.dtale.cn`.
 
 ```bash
 npm install

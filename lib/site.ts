@@ -6,7 +6,7 @@ export function publicPath(path: string) {
 
 export const site = {
   name: "MarkdownTools",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://WangLaoShi.github.io/MarkdownTools",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://www.dtale.cn/MarkdownTools",
   title: "Markdown Tools — Editor, Markdown to PDF & Table Generator",
   description:
     "Free markdown editor, markdown to PDF, PDF to markdown, markdown to HTML, and table generator. Word and README tools too. Runs in your browser — no signup.",

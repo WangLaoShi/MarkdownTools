@@ -27,7 +27,7 @@ jobs:
       - run: npx next build
         env:
           NEXT_PUBLIC_BASE_PATH: /MarkdownTools
-          NEXT_PUBLIC_SITE_URL: https://WangLaoShi.github.io/MarkdownTools
+          NEXT_PUBLIC_SITE_URL: http://www.dtale.cn/MarkdownTools
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
