@@ -1,69 +1,67 @@
-import Image from "next/image";
+import Link from "next/link";
+import { HomePreview } from "@/components/home/home-preview";
+import { ToolCard } from "@/components/tools/tool-card";
+import { tools } from "@/lib/catalog";
+import { categoryMeta } from "@/lib/site";
 
-export default function Home() {
+const guides = [
+  { href: "/cheat-sheet", label: "Markdown Cheat Sheet" },
+  { href: "/discord-markdown", label: "Discord Markdown Guide" },
+  { href: "/obsidian-cheat-sheet", label: "Obsidian Cheat Sheet" },
+  { href: "/preview", label: "Live Markdown Preview" },
+];
+
+export default function HomePage() {
+  const featured = tools.filter((tool) => tool.featured).slice(0, 6);
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="mx-auto max-w-6xl px-4 py-12">
+      <p className="text-sm text-muted">Browser-based Markdown toolkit</p>
+      <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">Free Online Markdown Tools</h1>
+      <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
+        Convert documents, format Markdown, render documentation callouts, preview diagrams and math, export print-ready PDFs, generate syntax, and analyze text without uploading your files.
+      </p>
+      <div className="mt-6 flex flex-wrap gap-3">
+        <Link href="/tools" className="rounded-lg bg-accent px-4 py-2 text-sm text-accent-foreground">
+          Browse tools
+        </Link>
+        <Link href="/editor" className="rounded-lg border border-border px-4 py-2 text-sm">
+          Open editor
+        </Link>
+        <Link href="/preview" className="rounded-lg border border-border px-4 py-2 text-sm">
+          Open viewer
+        </Link>
+      </div>
+      <p className="mt-6 text-sm text-muted">
+        Popular guides:{" "}
+        {guides.map((guide, index) => (
+          <span key={guide.href}>
+            {index > 0 && " · "}
+            <Link href={guide.href} className="underline decoration-border underline-offset-4">
+              {guide.label}
+            </Link>
+          </span>
+        ))}
+      </p>
+      <section className="mt-10">
+        <h2 className="mb-4 text-lg font-medium">Live Markdown Preview</h2>
+        <HomePreview />
+      </section>
+      <section className="mt-12">
+        <h2 className="text-lg font-medium">Featured tools</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((tool) => (
+            <ToolCard key={tool.slug} tool={tool} />
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
+      <section className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Object.entries(categoryMeta).map(([id, meta]) => (
+          <Link key={id} href={meta.href} className="rounded-2xl border border-border p-5 hover:border-foreground/20">
+            <h2 className="font-medium">{meta.label}</h2>
+            <p className="mt-2 text-sm text-muted">{meta.blurb}</p>
+          </Link>
+        ))}
+      </section>
     </div>
   );
 }

@@ -1,0 +1,44 @@
+export interface SyntaxPage {
+  slug: string;
+  title: string;
+  description: string;
+  answer: string;
+  syntax: string;
+  platforms: { name: string; support: string }[];
+  mistakes: string[];
+}
+
+const platforms = (rows: [string, string][]) => rows.map(([name, support]) => ({ name, support }));
+const common = platforms([
+  ["GitHub", "supported"],
+  ["GitLab", "supported"],
+  ["Obsidian", "supported"],
+  ["Discord", "partial"],
+  ["Slack", "different syntax"],
+]);
+
+export const syntaxPages: SyntaxPage[] = [
+  { slug: "bold", title: "How to Bold Text in Markdown", description: "Wrap text in double asterisks. Double underscores also work in most renderers.", answer: "To make text bold in Markdown, wrap it in double asterisks: **bold text**. Asterisks are the safer choice because they work in the middle of words.", syntax: "**bold text**\n__also bold__\n**bold** inside a sentence", platforms: common, mistakes: ["A single asterisk is italic, not bold.", "Slack uses one asterisk for bold."] },
+  { slug: "italic", title: "How to Italicize Text in Markdown", description: "Wrap text in single asterisks or single underscores.", answer: "Use *italic* or _italic_. Prefer asterisks when the word contains underscores.", syntax: "*italic*\n_also italic_", platforms: common, mistakes: ["Snake_case can swallow an underscore italic.", "Discord underline uses double underscores, not single."] },
+  { slug: "strikethrough", title: "Strikethrough in Markdown", description: "Wrap text in double tildes.", answer: "Use ~~strikethrough~~. A single tilde does nothing in CommonMark and GFM.", syntax: "This was ~~removed~~.", platforms: platforms([["GitHub", "supported"], ["Obsidian", "supported"], ["Discord", "supported"], ["Slack", "single tilde"], ["CommonMark", "not in the base spec"]]), mistakes: ["One tilde is not enough for GFM."] },
+  { slug: "headings", title: "Markdown Headings", description: "Start a line with one to six hash marks and a space.", answer: "ATX headings use # through ######. The space after the hashes is required.", syntax: "# Title\n## Section\n### Subsection", platforms: common, mistakes: ["#Title without a space is not a heading.", "Setext headings only cover levels 1 and 2."] },
+  { slug: "links", title: "Markdown Links", description: "Inline links, reference links, and autolinks.", answer: "The inline form is [text](https://example.com). Add a title in quotes when you need a tooltip.", syntax: "[MarkdownTools](https://www.markdowntools.io)\n<https://www.markdowntools.io>", platforms: common, mistakes: ["Unescaped parentheses in a URL end the link early.", "Spaces in the URL should be encoded."] },
+  { slug: "images", title: "Markdown Images", description: "Images use the same shape as links, with a leading bang.", answer: "Write ![alt](url). Markdown itself does not resize images; use HTML when you need a width.", syntax: "![Diagram](https://example.com/diagram.png)", platforms: common, mistakes: ["A missing alt string hurts readers who cannot see the image.", "Relative paths break when the file moves."] },
+  { slug: "code-blocks", title: "Markdown Code Blocks", description: "Fenced blocks with a language tag.", answer: "Open and close a block with three backticks and put the language on the first line.", syntax: "```ts\nconst ready = true;\n```", platforms: common, mistakes: ["Indentation-only code blocks are easy to break.", "A missing closing fence swallows the rest of the file."] },
+  { slug: "tables", title: "Markdown Tables", description: "Pipes and a separator row of dashes.", answer: "The second row must be dashes. Colons set alignment: :--- left, :---: center, ---: right.", syntax: "| Name | Score |\n| --- | ---: |\n| Ada | 10 |", platforms: platforms([["GitHub", "supported"], ["GitLab", "supported"], ["Obsidian", "supported"], ["Discord", "not supported"], ["Slack", "not supported"]]), mistakes: ["The separator row is required.", "Merged cells are not part of GFM."] },
+  { slug: "blockquotes", title: "Markdown Blockquotes", description: "Start lines with >.", answer: "Use > for a quote. Blank quoted lines keep one quote together. GitHub alerts start with [!NOTE].", syntax: "> A sentence worth keeping.\n>\n> Second paragraph.", platforms: common, mistakes: ["A blank line without > splits the quote.", "Nested quotes need >>."] },
+  { slug: "lists", title: "Markdown Lists", description: "Bullets and numbers.", answer: "Use -, *, or + for bullets. Numbers can all be 1. and the renderer will count.", syntax: "- One\n- Two\n  - Nested\n\n1. First\n1. Second", platforms: common, mistakes: ["Nested items need a consistent indent.", "A list that follows a paragraph without a blank line may stick to it."] },
+  { slug: "horizontal-rule", title: "Markdown Horizontal Rule", description: "Three or more dashes, asterisks, or underscores on their own line.", answer: "Put a blank line before --- so it does not become a setext heading underline.", syntax: "Above\n\n---\n\nBelow", platforms: common, mistakes: ["--- directly under text can be read as a heading underline."] },
+  { slug: "task-lists", title: "Markdown Task Lists", description: "A list item with [ ] or [x].", answer: "Write - [ ] for an open task and - [x] for a finished one. This is GFM, not base CommonMark.", syntax: "- [x] Write\n- [ ] Review", platforms: platforms([["GitHub", "supported"], ["GitLab", "supported"], ["Obsidian", "supported"], ["Discord", "not interactive"], ["CommonMark", "not in the base spec"]]), mistakes: ["The space inside the brackets is required."] },
+  { slug: "footnotes", title: "Markdown Footnotes", description: "A reference and a definition.", answer: "Write [^id] in the sentence and define [^id]: later. GitHub and many docs tools support this.", syntax: "A claim.[^src]\n\n[^src]: The source.", platforms: platforms([["GitHub", "supported"], ["Obsidian", "supported"], ["Discord", "not supported"], ["Slack", "not supported"]]), mistakes: ["The definition can sit anywhere, but readers expect it at the end."] },
+  { slug: "escaping-characters", title: "Escaping Markdown Characters", description: "A backslash removes the special meaning.", answer: "Prefix \\ * _ ` # | and other syntax characters with a backslash when you want them shown.", syntax: "Use \\*asterisks\\* and \\# not-a-heading", platforms: common, mistakes: ["Inside code spans you do not escape.", "A backslash before a normal letter is just a backslash."] },
+  { slug: "line-breaks", title: "Markdown Line Breaks", description: "A normal newline is a space. Two spaces or a backslash force a break.", answer: "End the line with two spaces or a backslash to get a <br>. A blank line starts a new paragraph.", syntax: "Line one  \nLine two\n\nNew paragraph.", platforms: common, mistakes: ["Editors that trim trailing space will delete the two-space break."] },
+  { slug: "emoji", title: "Emoji in Markdown", description: "Paste the character. Shortcodes depend on the app.", answer: "Paste 🎉 directly. :tada: works in apps that expand shortcodes, including this editor's cheat sheet, but not in plain GFM.", syntax: "Ship it 🚀\n:rocket:", platforms: platforms([["GitHub", "shortcodes in some surfaces"], ["Obsidian", "shortcodes optional"], ["Discord", "its own shortcodes"], ["Plain Markdown", "the character only"]]), mistakes: ["Do not assume :shortcode: survives a different renderer."] },
+  { slug: "highlight", title: "Highlight Text in Markdown", description: "Double equals are a common extension. HTML mark is the portable fallback.", answer: "==highlight== works in Obsidian and some other apps. For GitHub, use <mark>highlight</mark> if raw HTML is enabled.", syntax: "==highlight==\n<mark>highlight</mark>", platforms: platforms([["Obsidian", "supported"], ["GitHub", "HTML mark only"], ["Discord", "not supported"]]), mistakes: ["== is not GFM."] },
+  { slug: "comments", title: "Markdown Comments", description: "HTML comments are omitted by HTML renderers.", answer: "Wrap a note in <!-- comment -->. It disappears in HTML output and stays in the source.", syntax: "Visible.\n\n<!-- hidden from the rendered page -->", platforms: platforms([["GitHub", "hidden"], ["Obsidian", "hidden in preview"], ["Discord", "shown as text"]]), mistakes: ["Comments are not a secret. The source file still contains them."] },
+  { slug: "hacks", title: "Markdown Hacks", description: "Small patterns that solve layout gaps.", answer: "Use an HTML comment as a blank line inside a list, a <br> when trailing spaces get trimmed, and a details block for a collapsible section.", syntax: "- item\n\n  <!-- -->\n\n  continued\n\n<details>\n<summary>More</summary>\n\nHidden until opened.\n</details>", platforms: common, mistakes: ["HTML hacks fail in renderers that strip HTML.", "Discord ignores most of them."] },
+];
+
+export function getSyntaxPage(slug: string) {
+  return syntaxPages.find((page) => page.slug === slug);
+}
